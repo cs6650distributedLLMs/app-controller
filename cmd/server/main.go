@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 	"tldr/internal/api/routes"
+	"tldr/internal/clients"
 	"tldr/internal/core"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,8 @@ func main() {
 
 	gin.SetMode(os.Getenv("GIN_MODE"))
 	router := gin.Default()
+
+	clients.InitDyanmoDb()
 
 	// Setup CORS
 	router.Use(func(c *gin.Context) {

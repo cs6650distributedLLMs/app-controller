@@ -21,8 +21,9 @@ var (
 	TableName      string
 )
 
-// Initialize DynamoDB client
-func init() {
+// Initialize DynamoDB client with default settings
+func InitDyanmoDb() {
+	// Try to get table name from environment, or use default
 	TableName = os.Getenv("DOCUMENT_DYNAMODB_TABLE_NAME")
 
 	// Configure the DynamoDB client
@@ -243,7 +244,7 @@ func GetAllDocument(ctx context.Context) ([]models.DocumentListItem, error) {
 
 		if v, ok := item["PK"].(*types.AttributeValueMemberS); ok {
 			// Extract documentId from PK, which is in format "DOCUMENT#{documentId}"
-			document.DocumentID = v.Value[6:] // Skip "DOCUMENT#" prefix
+			document.DocumentID = v.Value[9:] // Skip "DOCUMENT#" prefix
 		}
 
 		if v, ok := item["size"].(*types.AttributeValueMemberN); ok {
