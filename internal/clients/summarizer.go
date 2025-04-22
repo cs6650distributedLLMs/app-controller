@@ -171,15 +171,18 @@ func (c *SummarizerClient) GetSummaryResult(ctx context.Context, documentID stri
 		return "", fmt.Errorf("summarizer service returned status %d: %s", resp.StatusCode, respBody)
 	}
 
-	// Parse the response
+	// Parse the response with updated structure
 	var resultResp struct {
-		Result string `json:"result"`
+		DocumentID string `json:"document_id"`
+		Status     string `json:"status"`
+		Summary    string `json:"summary"`
 	}
 	if err := json.Unmarshal(respBody, &resultResp); err != nil {
 		return "", fmt.Errorf("failed to unmarshal response: %w", err)
 	}
 
-	return resultResp.Result, nil
+	// Return the summary field instead of result
+	return resultResp.Summary, nil
 }
 
 // GetSummary gets the summary for a document
