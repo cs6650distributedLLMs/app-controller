@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"os"
+	"runtime"
 	"time"
 	"tldr/internal/api/routes"
 	"tldr/internal/clients"
@@ -17,8 +17,11 @@ func main() {
 
 	core.InitSnowflake()
 
-	gin.SetMode(os.Getenv("GIN_MODE"))
-	router := gin.Default()
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	log.Printf("Using %d CPU cores", runtime.NumCPU())
+
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
 
 	clients.InitDyanmoDb()
 
@@ -47,10 +50,7 @@ func main() {
 	routes.SetupRoutes(router)
 
 	// Get port from environment or use default
-	port := os.Getenv("APP_PORT")
-	if port == "" {
-		port = "8080"
-	}
+	port := "8080"
 
 	// Start the server
 	log.Printf("Server listening on port %s", port)
