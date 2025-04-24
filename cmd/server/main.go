@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"runtime"
 	"time"
 	"tldr/internal/api/routes"
@@ -37,11 +38,14 @@ func main() {
 		c.Next()
 	})
 
+	node_id := os.Getenv("NODE_ID")
+
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status":    "ok",
 			"service":   "tldr",
+			"node_id":   node_id,
 			"timestamp": time.Now().UnixMilli(),
 		})
 	})
